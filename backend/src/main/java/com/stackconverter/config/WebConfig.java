@@ -1,27 +1,24 @@
 package com.stackconverter.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
 
-                registry.addMapping("/api/**")
-                        .allowedOrigins(
-                                "https://stackconverter.com", // production frontend
-                                "http://localhost:5173"       // local development
-                        )
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*");
-            }
-        };
+        registry.addMapping("/api/**")
+                .allowedOrigins(
+                    "http://localhost:5173",                // Local React Dev
+                    "https://stackconverter.com",           // Production main domain
+                    "https://www.stackconverter.com",       // www version
+                    "https://stackconverter.vercel.app"     // Vercel preview URLs
+                )
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowCredentials(false);
     }
 }
