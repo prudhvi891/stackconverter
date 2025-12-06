@@ -1,44 +1,15 @@
-# Maven & Gradle build outputs
 target/
-build/
-out/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
 
-# Log files
-*.log
-logs/
-
-# Temporary files
-*.tmp
-
-# IDE files
-.idea/
-*.iml
-*.ipr
-*.iws
-.vscode/
-.project
+# Eclipse
 .classpath
+.project
 .settings/
 
-# OS files
-.DS_Store
-Thumbs.db
+# Intellij
+.idea/
+*.iml
 
-# Local environment / secrets
-*.env
-*.properties
-application-local.properties
-application-dev.properties
-application-prod.properties
-
-# Spring Boot specific files
-# (Sometimes created when running jar)
-spring.log
-
-# Node / Frontend inside backend (if accidentally added)
-node_modules/
-dist/
-
-# Generated files
-*.jar
-*.war
+# Logs
+*.log
