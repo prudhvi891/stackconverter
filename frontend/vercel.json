@@ -1,12 +1,6 @@
 {
   "version": 2,
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "headers": {
-        "Cache-Control": "public, max-age=0, must-revalidate"
-      }
-    }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
