@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://stackconverter.com/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/base64</loc>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/base64-file</loc>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/url</loc>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/qr</loc>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/hash</loc>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/timestamp</loc>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/excel-csv</loc>
+  </url>
+
+  <url>
+    <loc>https://stackconverter.com/about</loc>
+  </url>
+
+</urlset>
