@@ -12,7 +12,12 @@ export default function Base64FileTool() {
   const [progress, setProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Smooth progress bar animation
+  const [downloadBlob, setDownloadBlob] = useState<Blob | null>(null);
+  const [downloadFilename, setDownloadFilename] = useState<string>("");
+
+  // ──────────────────────────────────────────
+  // Progress bar animation
+  // ──────────────────────────────────────────
   useEffect(() => {
     let interval: any;
 
@@ -29,6 +34,9 @@ export default function Base64FileTool() {
     return () => clearInterval(interval);
   }, [loading]);
 
+  // ──────────────────────────────────────────
+  // Drag & drop handler
+  // ──────────────────────────────────────────
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
@@ -40,6 +48,30 @@ export default function Base64FileTool() {
     }
   };
 
+  // ──────────────────────────────────────────
+  // Parse filename from backend response
+  // ──────────────────────────────────────────
+  const parseFilenameFromContentDisposition = (cd: string | null) => {
+    if (!cd) return null;
+
+    // filename*=UTF-8''
+    let match = cd.match(/filename\*=UTF-8''([^;]+)/);
+    if (match) return decodeURIComponent(match[1]);
+
+    // filename="something.ext"
+    match = cd.match(/filename="([^"]+)"/);
+    if (match) return match[1];
+
+    // filename=something.ext
+    match = cd.match(/filename=([^;]+)/);
+    if (match) return match[1];
+
+    return null;
+  };
+
+  // ──────────────────────────────────────────
+  // Convert handler
+  // ──────────────────────────────────────────
   const handleConvert = () => {
     if (!file) {
       setError("Please upload a file.");
@@ -48,12 +80,15 @@ export default function Base64FileTool() {
 
     setError("");
     setLoading(true);
+    setDownloadBlob(null);
+    setDownloadFilename("");
 
     const formData = new FormData();
     formData.append("file", file);
 
     const xhr = new XMLHttpRequest();
 
+    // Progress tracking
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) {
         const percent = Math.round((event.loaded / event.total) * 100);
@@ -61,26 +96,25 @@ export default function Base64FileTool() {
       }
     };
 
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        const blob = new Blob([xhr.response], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-
-        a.href = url;
-        a.download =
-          mode === "encode" ? "encoded_base64.txt" : "decoded_output.txt";
-        a.click();
-      } else {
-        setError("Failed to convert file");
-      }
-
-      setLoading(false);
-    };
-
     xhr.onerror = () => {
       setError("Network error");
       setLoading(false);
+    };
+
+    xhr.onload = () => {
+      setLoading(false);
+
+      if (xhr.status === 200) {
+        const blob = xhr.response as Blob;
+
+        const cdHeader = xhr.getResponseHeader("Content-Disposition");
+        const serverFilename = parseFilenameFromContentDisposition(cdHeader);
+
+        setDownloadBlob(blob);
+        setDownloadFilename(serverFilename || "download.txt");
+      } else {
+        setError("Failed to convert file");
+      }
     };
 
     xhr.open(
@@ -90,45 +124,48 @@ export default function Base64FileTool() {
         : `${API_BASE}/api/base64/file/decode`
     );
 
+    // Return Blob from backend
     xhr.responseType = "blob";
     xhr.send(formData);
   };
 
+  // ──────────────────────────────────────────
+  // Download handler
+  // ──────────────────────────────────────────
+  const handleDownload = () => {
+    if (!downloadBlob || !downloadFilename) return;
+
+    const url = URL.createObjectURL(downloadBlob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = downloadFilename;
+    a.click();
+
+    URL.revokeObjectURL(url);
+  };
+
+  // ──────────────────────────────────────────
+  // UI
+  // ──────────────────────────────────────────
   return (
     <>
       <Seo
         title="Base64 File Encoder & Decoder — Convert Files to Base64 | Stack Converter"
-        description="Upload a file and convert it to Base64, or upload Base64 and decode it back to the original file. Supports text files and more."
-        keywords="base64 file converter, file to base64, decode base64 file, base64 download"
-      />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Tool",
-            name: "Base64 File Converter",
-            url: "https://stackconverter.com/base64-file",
-            featureList: ["File to Base64", "Base64 to File"],
-          }),
-        }}
+        description="Convert any file into Base64 text or decode Base64 text back into the original file."
+        keywords="base64 file converter, file to base64, decode base64 file, base64 converter"
       />
 
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow space-y-8">
         <h2 className="text-3xl font-semibold text-gray-900">
           Base64 File Converter
         </h2>
-        <p className="text-gray-600">
-          Upload a text file to convert it to Base64 or decode a Base64 text
-          file back to normal text.
-        </p>
 
         {/* Drag & Drop Zone */}
         <div
-          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition 
-          ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}
-        `}
+          className={`border-2 border-dashed rounded-xl p-8 text-center transition ${
+            isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
+          }`}
           onDragOver={(e) => {
             e.preventDefault();
             setIsDragging(true);
@@ -140,26 +177,28 @@ export default function Base64FileTool() {
             type="file"
             id="fileInput"
             className="hidden"
-            accept=".txt"
+            accept={mode === "encode" ? "*" : ".txt"}
             onChange={(e) => setFile(e.target.files?.[0] || null)}
           />
 
           {!file ? (
-            <label htmlFor="fileInput" className="block cursor-pointer">
+            <label htmlFor="fileInput" className="cursor-pointer">
               <p className="text-lg text-gray-700 mb-2">
                 Drag & drop a file here, or{" "}
                 <span className="text-blue-600">browse</span>
               </p>
-              <p className="text-sm text-gray-500">Supported: .txt</p>
+              <p className="text-sm text-gray-500">
+                {mode === "encode"
+                  ? "Supports ANY file type"
+                  : "Upload Base64 .txt file"}
+              </p>
             </label>
           ) : (
             <div>
-              <p className="text-gray-700 text-lg font-medium">
-                File Selected:
-              </p>
-              <p className="text-gray-900 font-semibold mt-1">{file.name}</p>
+              <p className="text-gray-700">File Selected:</p>
+              <p className="font-semibold">{file.name}</p>
               <button
-                className="mt-4 text-red-500 underline text-sm"
+                className="text-red-500 underline text-sm mt-2"
                 onClick={() => setFile(null)}
               >
                 Remove file
@@ -170,16 +209,18 @@ export default function Base64FileTool() {
 
         {/* Mode Selection */}
         <div>
-          <label className="block text-sm font-medium mb-2">
-            Choose Conversion
-          </label>
+          <label className="text-sm font-medium">Choose Conversion</label>
           <select
-            className="w-full border rounded-lg p-3"
+            className="w-full border p-3 rounded-lg mt-1"
             value={mode}
-            onChange={(e) => setMode(e.target.value as any)}
+            onChange={(e) => {
+              setMode(e.target.value as any);
+              setFile(null);
+              setDownloadBlob(null);
+            }}
           >
-            <option value="encode">Normal Text → Base64</option>
-            <option value="decode">Base64 → Normal Text</option>
+            <option value="encode">Any File → Base64 (.txt)</option>
+            <option value="decode">Base64 (.txt) → Original File</option>
           </select>
         </div>
 
@@ -199,10 +240,22 @@ export default function Base64FileTool() {
         <button
           onClick={handleConvert}
           disabled={loading}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition"
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
         >
           {loading ? "Processing..." : "Convert"}
         </button>
+
+        {/* Download Button */}
+        {downloadBlob && (
+          <div className="pt-4">
+            <button
+              onClick={handleDownload}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              Download {downloadFilename}
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
