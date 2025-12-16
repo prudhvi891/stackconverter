@@ -118,18 +118,23 @@ export default function JsonXmlTool() {
     <>
       <Seo
         title="JSON ⇆ XML Converter — Stack Converter"
-        description="Convert JSON to XML or XML to JSON instantly. Paste input or upload files. Clean and developer-friendly."
+        description="Convert JSON to XML or XML to JSON instantly. Paste input or upload files."
         keywords="json xml converter, xml to json, json to xml"
       />
 
-      <div className="max-w-4xl mx-auto bg-white p-8 mt-8 rounded-xl shadow space-y-8">
-        <h1 className="text-3xl font-bold">JSON ⇆ XML Converter</h1>
-        <p className="text-gray-600">
-          Paste JSON/XML or upload a file to convert.
-        </p>
+      <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl shadow-xl p-8 space-y-7">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-semibold text-gray-900 mb-3">
+            JSON ⇆ XML Converter
+          </h1>
+          <p className="text-gray-600">
+            Paste JSON/XML or upload a file to convert.
+          </p>
+        </div>
 
-        {/* Conversion Explanation */}
-        <div className="mt-6 border rounded-lg bg-gray-50 p-4">
+        {/* Info Section — UNCHANGED */}
+        <div className="border rounded-lg bg-gray-50 p-4">
           <details>
             <summary className="cursor-pointer font-medium text-gray-800">
               ℹ️ How JSON ⇆ XML conversion works (Attributes & Text)
@@ -138,10 +143,9 @@ export default function JsonXmlTool() {
             <div className="mt-3 text-sm text-gray-700 space-y-3 leading-relaxed">
               <p>
                 JSON and XML use different data models. XML supports{" "}
-                <b>attributes</b> and
-                <b> text values</b>, while JSON does not. To ensure accurate and
-                reversible conversion, Stack Converter follows a widely used
-                mapping convention.
+                <b>attributes</b> and <b>text values</b>, while JSON does not.
+                To ensure accurate and reversible conversion, Stack Converter
+                follows a widely used mapping convention.
               </p>
 
               <div>
@@ -163,9 +167,8 @@ export default function JsonXmlTool() {
 
               <div>
                 <p className="font-medium text-gray-800 mb-1">Example</p>
-
                 <pre className="bg-gray-900 text-green-300 p-3 rounded text-xs overflow-x-auto">
-                  {`JSON:
+{`JSON:
 {
   "product": {
     "@id": "100",
@@ -198,7 +201,9 @@ XML:
           <button
             onClick={() => setMode("json-xml")}
             className={`px-4 py-2 rounded-lg border ${
-              mode === "json-xml" ? "bg-blue-600 text-white" : "bg-gray-100"
+              mode === "json-xml"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 hover:bg-gray-200"
             }`}
           >
             JSON → XML
@@ -206,7 +211,9 @@ XML:
           <button
             onClick={() => setMode("xml-json")}
             className={`px-4 py-2 rounded-lg border ${
-              mode === "xml-json" ? "bg-blue-600 text-white" : "bg-gray-100"
+              mode === "xml-json"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 hover:bg-gray-200"
             }`}
           >
             XML → JSON
@@ -217,7 +224,7 @@ XML:
         <div>
           <label className="block font-medium mb-2">Input</label>
           <textarea
-            className="w-full min-h-[240px] border rounded-xl p-4 resize-y"
+            className="w-full min-h-[260px] border rounded-xl p-4 resize-y"
             placeholder={
               mode === "json-xml" ? "Paste JSON here..." : "Paste XML here..."
             }
@@ -258,7 +265,9 @@ XML:
             </>
           ) : (
             <div className="flex justify-center items-center gap-3">
-              <span className="font-medium truncate max-w-xs">{file.name}</span>
+              <span className="font-medium truncate max-w-xs">
+                {file.name}
+              </span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -291,13 +300,13 @@ XML:
           </button>
         </div>
 
-        {/* Result (Paste only) */}
+        {/* Result */}
         {isPasteMode && output && (
           <div>
             <label className="block font-medium mb-2">Result</label>
             <textarea
               readOnly
-              className="w-full min-h-[240px] border rounded-xl p-4 resize-y bg-gray-50"
+              className="w-full min-h-[260px] border rounded-xl p-4 resize-y bg-gray-50"
               value={output}
             />
             <div className="flex gap-4 mt-3">
@@ -311,7 +320,7 @@ XML:
           </div>
         )}
 
-        {/* Download (Paste + Upload) */}
+        {/* Download */}
         {downloadBlob && (
           <div>
             <button
