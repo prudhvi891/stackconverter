@@ -39,10 +39,22 @@ export default function Home() {
           <Link to="/excel-csv">
             <div className="border rounded-xl p-6 hover:shadow-md transition cursor-pointer">
               <h3 className="text-lg font-semibold text-gray-800">
-                Excel ↔ CSV Converter
+                Excel ⇆ CSV Converter
               </h3>
               <p className="text-gray-600 mt-1">
                 Convert Excel files to CSV and CSV files back to Excel.
+              </p>
+            </div>
+          </Link>
+
+          {/* JSON <> XML Card */}
+          <Link to="/json-xml">
+            <div className="border rounded-xl p-6 hover:shadow-md transition cursor-pointer">
+              <h3 className="text-lg font-semibold text-gray-800">
+                JSON ⇆ XML Converter
+              </h3>
+              <p className="text-gray-600 mt-1">
+                Convert JSON to XML or XML to JSON. 
               </p>
             </div>
           </Link>

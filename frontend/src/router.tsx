@@ -9,6 +9,7 @@ import TimestampTool from "./pages/TimestampTool";
 import ExcelCsvTool from "./pages/ExcelCsvTool";
 import Base64FileTool from "./pages/Base64FileTool";
 import About from "./pages/About";
+import JsonXmlTool from "./pages/JsonXmlTool";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: "timestamp", element: <TimestampTool /> },
       { path: "excel-csv", element: <ExcelCsvTool /> },
       { path: "base64-file", element: <Base64FileTool /> },
+      { path: "json-xml", element: <JsonXmlTool /> },
       { path: "/about", element: <About /> }
     ],
   },

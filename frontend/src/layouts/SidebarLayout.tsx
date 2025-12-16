@@ -93,7 +93,7 @@ const SidebarLayout = () => {
             </NavLink>
           </li>
 
-          {/* Excel <> csv */}
+          {/* Excel ⇆ csv */}
           <li>
             <NavLink
               to="/excel-csv"
@@ -115,7 +115,34 @@ const SidebarLayout = () => {
                   d="M4 4h16v16H4z M8 8l8 8M16 8l-8 8"
                 />
               </svg>
-              {!collapsed && "Excel ↔ CSV"}
+              {!collapsed && "Excel ⇆ CSV"}
+            </NavLink>
+          </li>
+
+          {/* JSON ⇆ XML */}
+          <li>
+            <NavLink
+              to="/json-xml"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-lg transition 
+                ${isActive ? "bg-gray-800 text-white" : "hover:bg-gray-800/50"}`
+              }
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M17 7l-5-5-5 5m5-5v18"
+                />
+              </svg>
+
+              {!collapsed && "JSON ⇆ XML"}
             </NavLink>
           </li>
 

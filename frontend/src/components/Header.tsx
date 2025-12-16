@@ -1,25 +1,47 @@
 import { useLocation } from "react-router-dom";
 
-const pageTitles: Record<string, string> = {
-  "/": "Dashboard",
-  "/base64": "Base64 Encode/Decode",
-  "/url": "URL Encode/Decode",
-  "/qr": "QR Generator",
-  "/hash": "Hash Generator",
-  "/timestamp": "Timestamp Converter",
-  "/excel-csv": "File Converter",
-  "/base64-file": "File Converter"
+const pageMeta: Record<
+  string,
+  { section: string; title: string }
+> = {
+  "/": { section: "Dashboard", title: "Overview" },
+  "/excel-csv": { section: "File Tools", title: "Excel ↔ CSV" },
+  "/json-xml": { section: "File Tools", title: "JSON ↔ XML" },
+  "/base64-file": { section: "File Tools", title: "Base64 File Tool" },
+  "/base64": { section: "Text Tools", title: "Base64 Text Tool" },
+  "/url": { section: "Text Tools", title: "URL Encode / Decode" },
+  "/qr": { section: "Generators", title: "QR Generator" },
+  "/hash": { section: "Generators", title: "Hash Generator" },
+  "/timestamp": { section: "Converters", title: "Timestamp Converter" },
+  "/about": { section: "Dashboard", title: "About" }
 };
 
 export default function Header() {
   const { pathname } = useLocation();
-  const title = pageTitles[pathname] || "Stack Converter";
+  const meta = pageMeta[pathname];
 
   return (
-    <header className="w-full bg-white shadow-sm border-b py-3 px-6 sticky top-0 z-50">
-      <h1 className="text-xl font-semibold text-gray-800">
-        {title}
-      </h1>
+    <header className="sticky top-0 z-40 bg-white border-b">
+      <div className="h-14 px-6 flex items-center justify-between">
+        {/* Left: Breadcrumb */}
+        <div className="flex items-center text-sm text-gray-600">
+          {meta ? (
+            <>
+              <span className="font-medium text-gray-500">
+                {meta.section}
+              </span>
+              <span className="mx-2 text-gray-400">›</span>
+              <span className="font-semibold text-gray-800">
+                {meta.title}
+              </span>
+            </>
+          ) : (
+            <span className="font-semibold text-gray-800">
+              Stack Converter
+            </span>
+          )}
+        </div>
+      </div>
     </header>
   );
 }
