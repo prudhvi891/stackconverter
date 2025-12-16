@@ -111,7 +111,7 @@ export default function ExcelCsvTool() {
 
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow space-y-8">
         <h2 className="text-3xl font-semibold text-gray-900">
-          Excel ↔ CSV Converter
+          Excel ⇆ CSV Converter
         </h2>
 
         <p className="text-gray-600">
