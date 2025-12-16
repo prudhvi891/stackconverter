@@ -106,7 +106,7 @@ const SidebarLayout = () => {
       <div className="flex flex-col flex-1">
         {/* Sticky Header */}
         <Header />
-        
+
         <main className="flex-1 overflow-y-auto">
           <div className="min-h-full flex flex-col">
             {/* Page Content */}
@@ -251,6 +251,6 @@ const ClockIcon = (p: any) => (
 
 const InfoIcon = (p: any) => (
   <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path d="M13 16h-1v-4h-1m1-4h.01" strokeWidth="2" />
+    <path d="M13 16h-1v-4h-1m1-4h.01" strokeWidth="2" strokeLinecap="round"/>
   </svg>
 );
