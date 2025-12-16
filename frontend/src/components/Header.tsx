@@ -1,9 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-const pageMeta: Record<
-  string,
-  { section: string; title: string }
-> = {
+const pageMeta: Record<string, { section: string; title: string }> = {
   "/": { section: "Dashboard", title: "Overview" },
   "/excel-csv": { section: "File Tools", title: "Excel ↔ CSV" },
   "/json-xml": { section: "File Tools", title: "JSON ↔ XML" },
@@ -21,9 +18,8 @@ export default function Header() {
   const meta = pageMeta[pathname];
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b">
-      <div className="h-14 px-6 flex items-center justify-between">
-        {/* Left: Breadcrumb */}
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
+      <div className="h-14 px-6 flex items-center">
         <div className="flex items-center text-sm text-gray-600">
           {meta ? (
             <>
